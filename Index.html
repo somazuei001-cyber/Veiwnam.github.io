@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Love Stages 💝 (Ultra Smooth Touch)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700;800&family=Itim&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#ff4d6d; --primary-2:#ff8fa3; --accent:#7c83ff; --accent-2:#60a5fa;
+  --ink:#0b1220; --ink-2:#1f2937; --ink-3:#475569;
+  --ring:rgba(15,23,42,.14); --glass:rgba(255,255,255,.92);
+  --bg1:#1a1533; --bg2:#0b1026;
+  --shadow:0 10px 30px rgba(0,0,0,.20); --shadow-lg:0 24px 56px rgba(0,0,0,.32);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+:lang(th){ letter-spacing:0 !important }
+body{
+  margin:0; font-family:'Kanit',system-ui,Segoe UI,Roboto,Arial,sans-serif; color:var(--ink); line-height:1.75;
+  background:
+    radial-gradient(900px 500px at 20% -10%, #2a1f3d 0, transparent 60%),
+    radial-gradient(900px 500px at 80% -10%, #14213d 0, transparent 60%),
+    linear-gradient(180deg, var(--bg1), var(--bg2));
+  overflow-x:hidden; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+}
+
+/* Layers */
+#stars{position:fixed; inset:0; z-index:0; pointer-events:none}
+#floatEmo{position:fixed; inset:0; z-index:1; pointer-events:none}
+#petsLayer{position:fixed; inset:0; z-index:2; pointer-events:none}
+.container{position:relative; z-index:3}
+#fxLayer{position:fixed; inset:0; z-index:4; pointer-events:none; contain:layout paint}
+#toasts{position:fixed; left:50%; bottom:16px; transform:translateX(-50%); z-index:5; width:min(95vw,560px); display:flex; flex-direction:column; gap:8px}
+.modal{position:fixed; inset:0; z-index:40; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,.65)}
+.modal.open{display:flex}
+
+/* Utilities */
+.hidden{display:none !important}
+.center{text-align:center}
+.small{font-size:.98rem}
+.mt-8{margin-top:8px} .mt-12{margin-top:12px} .mt-16{margin-top:16px}
+.hand{font-family:'Itim',cursive}
+
+/* UI chrome */
+.container{max-width:1100px; margin:0 auto; padding:20px 16px}
+header{display:flex; justify-content:center; align-items:center; gap:12px; padding:22px 0; user-select:none}
+.brand .logo{font-size:30px; filter:drop-shadow(0 4px 10px rgba(255,77,109,.45))}
+.brand .text{color:#fff; font-weight:800; font-size:clamp(18px,3vw,28px); text-shadow:0 1px 0 rgba(255,255,255,.2)}
+.progress{position:sticky; top:0; height:7px; background:rgba(255,255,255,.25); border-radius:999px; overflow:hidden}
+.progress i{display:block; height:100%; width:0%;
+  background:linear-gradient(90deg,#ff4d6d,#ff8fa3,#7c83ff,#60a5fa);
+  animation:barGlow 2.8s linear infinite
+}
+@keyframes barGlow{0%{filter:brightness(1)}50%{filter:brightness(1.2)}100%{filter:brightness(1)}}
+.badge{display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border:1px solid var(--ring); border-radius:999px; background:#fff; font-weight:800; box-shadow:0 6px 20px rgba(0,0,0,.06)}
+#elapsed{position:fixed; left:10px; top:10px; z-index:6}
+
+/* Cards/Buttons */
+.card{background:var(--glass); border:1px solid var(--ring); border-radius:22px; box-shadow:var(--shadow); backdrop-filter:saturate(110%) blur(2px); position:relative; transform:translateZ(0)}
+.p-24{padding:24px}.p-32{padding:32px}.p-40{padding:40px}
+button{appearance:none; border:0; cursor:pointer; font-family:inherit; transition:transform .18s ease, box-shadow .18s ease, filter .18s ease; touch-action:manipulation}
+.btn{padding:12px 16px; border-radius:14px; font-weight:800; position:relative; overflow:hidden; isolation:isolate}
+.btn::after{content:""; position:absolute; inset:-2px; border-radius:inherit; box-shadow:0 0 0 0 rgba(255,255,255,.0); opacity:0; transition:all .25s ease}
+.btn:hover::after{box-shadow:0 0 16px 6px rgba(255,255,255,.35); opacity:1}
+.btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-2)); color:#fff; box-shadow:0 10px 26px rgba(255,77,109,.28)}
+.btn-ghost{background:#fff; border:1px solid var(--ring); color:var(--ink)}
+.btn-accent{background:linear-gradient(135deg,#7c83ff,#6366f1); color:#fff; box-shadow:0 10px 26px rgba(99,102,241,.28)}
+.btn:hover{transform:translateY(-1px); filter:saturate(110%)} .btn:active{transform:translateY(1px) scale(.99)}
+
+/* Typography */
+.title{font-size:clamp(28px,4vw,48px); color:var(--ink)}
+.title.black-shimmer{
+  background:linear-gradient(90deg,#111 0%,#111 40%,#444 50%,#111 60%,#111 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  animation:blackShimmer 3.2s linear infinite;
+}
+.subtitle{font-size:clamp(16px,2.4vw,20px); color:var(--ink-2); line-height:1.9}
+.aura{position:relative}
+.aura::before{content:""; position:absolute; inset:-8px; border-radius:24px; background:radial-gradient(120px 60px at 20% 20%, rgba(255,77,109,.22), transparent 60%), radial-gradient(120px 60px at 80% 80%, rgba(96,165,250,.18), transparent 60%); filter:blur(14px); z-index:-1; opacity:.7; animation:pulse 3.8s ease-in-out infinite}
+@keyframes pulse{0%{transform:scale(1); opacity:.55}50%{transform:scale(1.03); opacity:.9}100%{transform:scale(1); opacity:.55}}
+.jiggle{display:inline-block; animation:jiggle 2.8s ease-in-out infinite}
+@keyframes jiggle{0%,100%{transform:translateY(0)}10%{transform:translateY(-1px)}20%{transform:translateY(1px)}}
+
+/* Stage virtualization */
+.stage{display:none; opacity:0; transform:translateY(10px); content-visibility:auto; contain-intrinsic-size:600px}
+.stage.active{display:block; animation:stageIn .45s cubic-bezier(.18,.72,.22,1) forwards}
+@keyframes stageIn{from{opacity:0; transform:translateY(10px) scale(.985)} to{opacity:1; transform:translateY(0) scale(1)}}
+.stage:not(.active){pointer-events:none}
+
+/* Toast */
+.toast{background:#fff; border:1px solid var(--ring); border-radius:12px; padding:12px 14px; box-shadow:var(--shadow); opacity:0; transform:translateY(6px); transition:all .2s ease; font-weight:800}
+.toast.show{opacity:1; transform:translateY(0)}
+.toast.ok{background:#ecfdf5} .toast.warn{background:#fff7ed} .toast.err{background:#fef2f2}
+
+/* Boards & Quiz */
+.board{display:grid; grid-template-columns:repeat(5, minmax(0,1fr)); gap:12px}
+@media (max-width:620px){ .board{grid-template-columns:repeat(4, minmax(0,1fr))} }
+@media (max-width:420px){ .board{grid-template-columns:repeat(3, minmax(0,1fr))} }
+.tile{aspect-ratio:1/1; border-radius:18px; border:1px solid var(--ring); background:#fff; position:relative; overflow:hidden; will-change:transform}
+.tile>span{position:absolute; inset:0; display:grid; place-items:center; font-size:24px}
+.tile.found{background:linear-gradient(135deg,var(--primary),#ff9ab1); color:#fff}
+.grid-match{display:grid; grid-template-columns:repeat(6, minmax(0,1fr)); gap:12px}
+@media (max-width:880px){ .grid-match{grid-template-columns:repeat(4, minmax(0,1fr))} }
+@media (max-width:520px){ .grid-match{grid-template-columns:repeat(3, minmax(0,1fr))} }
+.card-m{aspect-ratio:3/4; border-radius:16px; position:relative; perspective:900px; cursor:pointer; will-change:transform}
+.card-face{position:absolute; inset:0; border-radius:16px; display:grid; place-items:center; font-size:28px; backface-visibility:hidden; border:1px solid var(--ring)}
+.card-front{background:#fff} .card-back{background:#fff; transform:rotateY(180deg)}
+.card-m.flip .card-front{transform:rotateY(180deg)} .card-m.flip .card-back{transform:rotateY(360deg)}
+.card-m.matched .card-back{background:linear-gradient(135deg,var(--primary),#ff9ab1); color:#fff}
+.quiz{display:grid; gap:16px}
+.q{background:#fff; border:1px solid var(--ring); border-radius:16px; padding:16px}
+.q h4{margin:0 0 8px 0; color:#111}
+.opt{display:flex; flex-wrap:wrap; gap:8px}
+.opt button{border:1px solid var(--ring); background:#fff; color:#111; border-radius:12px; padding:8px 12px; font-weight:700}
+.opt button.selected{background:linear-gradient(135deg,#111,#333); color:#fff; border-color:transparent}
+
+/* Envelope */
+.letterbox{width:min(92vw,520px); background:#fff; border-radius:18px; border:1px solid var(--ring); box-shadow:var(--shadow-lg); overflow:hidden}
+.letter-flap{height:110px; background:linear-gradient(135deg,#ffd6e1,#fff); transform-origin:top; animation:flapOpen .7s ease forwards}
+@keyframes flapOpen{0%{transform:rotateX(0)}100%{transform:rotateX(180deg)}}
+.letter-paper{padding:18px 18px 24px; transform:translateY(-60px); animation:paperOut .7s .2s ease forwards; opacity:0}
+@keyframes paperOut{to{transform:translateY(0); opacity:1}}
+
+/* Balloon Area (rAF) */
+#balloonArea{position:relative; height:540px; overflow:hidden; border:1px dashed var(--ring); border-radius:16px; background:linear-gradient(180deg, rgba(255,255,255,.96), rgba(255,255,255,.78))}
+.balloonWrap{position:absolute; will-change:transform}
+.balloon{position:absolute; left:50%; transform:translate(-50%,-50%); width:54px; height:68px; cursor:pointer; border-radius:50% 50% 45% 45%; --balloon:#ff6b81;
+  background: radial-gradient(40% 40% at 30% 28%, rgba(255,255,255,.65), rgba(255,255,255,0) 60%), linear-gradient(180deg, var(--balloon), rgba(0,0,0,.06));
+  border:2px solid rgba(0,0,0,.08); box-shadow:0 8px 16px rgba(0,0,0,.12)}
+.balloon::after{content:""; position:absolute; left:50%; transform:translateX(-50%); bottom:-24px; width:2px; height:28px; background:rgba(0,0,0,.18); border-radius:2px}
+
+/* Floating Emoji */
+.emo{position:absolute; top:100vh; opacity:.18; filter:drop-shadow(0 1px 0 rgba(255,255,255,.3)); will-change:transform,opacity; pointer-events:none}
+@keyframes floatUp { from { transform: translateY(10vh) translateX(var(--dx,0)); opacity:.12;} to { transform: translateY(-120vh) translateX(calc(var(--dx,0) * 1.8)); opacity:.22;} }
+</style>
+</head>
+<body>
+<canvas id="stars"></canvas>
+<div id="floatEmo" aria-hidden="true"></div>
+<div id="petsLayer" aria-hidden="true"></div>
+
+<!-- หนึ่งเลเยอร์สำหรับเอฟเฟกต์ทั้งหมด (หัวใจ/ริปเปิล) ใช้ pool -->
+<div id="fxLayer"></div>
+
+<div id="toasts" aria-live="polite"></div>
+<div id="elapsed" class="badge">⏳ คบกันมาแล้ว: <b id="elapsedTxt">--</b></div>
+
+<div class="container">
+  <header class="nav">
+    <div class="brand aura"><div class="logo">💝</div><div class="text"><span class="jiggle">Love Stages</span> — Just for You</div></div>
+  </header>
+  <div class="progress"><i id="bar"></i></div>
+
+  <!-- Gate -->
+  <section id="stage-gate" class="stage active">
+    <div class="card p-40 center aura">
+      <h1 class="title black-shimmer">Anniversary For Por Love</h1>
+      <p class="subtitle mt-12" id="gateMsg"></p>
+      <div class="mt-16" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <input id="gateInput" inputmode="none" readonly placeholder="วันสำคัญของเราสองคน 💞"
+               style="padding:14px;border-radius:14px;border:1px solid var(--ring);min-width:260px;background:#fff;color:var(--ink);font-weight:800;caret-color:transparent"/>
+        <button id="gateBtn" class="btn btn-primary">ปลดล็อก</button>
+      </div>
+      <div id="keypad" class="mt-12" style="display:grid;grid-template-columns:repeat(3,62px);gap:8px;justify-content:center">
+        <button class="btn btn-ghost k">1</button><button class="btn btn-ghost k">2</button><button class="btn btn-ghost k">3</button>
+        <button class="btn btn-ghost k">4</button><button class="btn btn-ghost k">5</button><button class="btn btn-ghost k">6</button>
+        <button class="btn btn-ghost k">7</button><button class="btn btn-ghost k">8</button><button class="btn btn-ghost k">9</button>
+        <button class="btn btn-ghost k">/</button><button class="btn btn-ghost k">0</button><button class="btn btn-ghost k">⌫</button>
+        <button id="keyEnter" class="btn btn-accent" style="grid-column:1/4">ตกลง</button>
+      </div>
+      <div id="gateErr" class="mt-12 small" style="color:#ef4444;font-weight:800"></div>
+      <div id="annivInfo" class="mt-12 small"></div>
+    </div>
+  </section>
+
+  <!-- Story A -->
+  <section id="stage-story-a" class="stage">
+    <div class="card p-40 center aura">
+      <h2 class="title" style="color:#111">ตอนที่ 1 — <span class="jiggle">ที่ไหนดีน้า</span> ✨</h2>
+      <p class="subtitle mt-12" id="storyAtext"></p>
+      <div class="mt-16" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <button class="btn btn-ghost miniA" data-correct="1">🏝️ เกาะล้าน</button>
+        <button class="btn btn-ghost miniA" data-correct="0">☕ คาเฟ่กลางเมือง</button>
+        <button class="btn btn-ghost miniA" data-correct="0">🎢 สวนสนุก</button>
+      </div>
+      <div class="mt-12 small hintA hidden">💡 ใบ้: เกาะ + น้ำทะเลใส</div>
+      <div id="countdownA" class="small mt-12" style="font-weight:800;color:var(--ink-3)"></div>
+      <div id="quoteA" class="small mt-8"></div>
+    </div>
+  </section>
+
+  <!-- Stage 1 -->
+  <section id="stage-1" class="stage">
+    <div class="card p-40 aura">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+        <h3 style="font-size:clamp(18px,2.5vw,26px);font-weight:800;color:var(--ink)">ด่าน 1: ค้นหาหัวใจ 💖</h3>
+        <div id="score1" class="badge">Found: 0/7</div>
+      </div>
+      <p class="small mt-8">คลิกหา 💖 ให้ครบ</p>
+      <div id="board1" class="board mt-16"></div>
+      <div id="countdown1" class="small mt-12" style="font-weight:800;color:var(--ink-3)"></div>
+    </div>
+  </section>
+
+  <!-- Story B -->
+  <section id="stage-story-b" class="stage">
+    <div class="card p-40 center aura">
+      <h2 class="title" style="color:#111">ตอนที่ 2 — <span class="jiggle">คำตอบจากใจ</span> 💭</h2>
+      <p id="storyBtext" class="subtitle mt-12"></p>
+      <div class="mt-16" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <button class="btn btn-accent miniB-yes" data-correct="1">💖 เลือก</button>
+        <button class="btn btn-ghost miniB-no" data-correct="0">💬 ไม่เลือก</button>
+      </div>
+      <div class="mt-12 small hintB hidden">เค้าคิดไว้แล้วว่าเธอจะต้องเลือกเค้า.... 💗</div>
+      <div id="countdownB" class="small mt-12" style="font-weight:800;color:var(--ink-3)"></div>
+      <div id="quoteB" class="small mt-8"></div>
+    </div>
+  </section>
+
+  <!-- Stage 2 -->
+  <section id="stage-2" class="stage">
+    <div class="card p-40 aura">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+        <h3 style="font-size:clamp(18px,2.5vw,26px);font-weight:800;color:var(--ink)">ด่าน 2: Memory Match ✨</h3>
+        <div id="score2" class="badge">Matched: 0/6</div>
+      </div>
+      <p class="small mt-8">จับคู่ไอคอนให้ครบ</p>
+      <div id="gridMatch" class="grid-match mt-16"></div>
+      <div id="countdown2" class="small mt-12" style="font-weight:800;color:var(--ink-3)"></div>
+    </div>
+  </section>
+
+  <!-- Story C -->
+  <section id="stage-story-c" class="stage">
+    <div class="card p-40 center aura">
+      <h2 class="title" style="color:#111">ตอนที่ 3 — <span class="jiggle">อยากบอกให้รู้</span> 💫</h2>
+      <p id="storyCtext" class="subtitle mt-12"></p>
+      <div class="mt-16" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <input id="answerC" placeholder="พิมพ์คำตอบของเธอที่นี่"
+               style="padding:14px;border-radius:14px;border:1px solid var(--ring);min-width:260px;background:#fff;color:var(--ink);font-weight:700"/>
+        <button id="answerCBtn" class="btn btn-primary">💝 ตอบ</button>
+      </div>
+      <div class="mt-12 small hintC hidden">ใบ้: “เค้าเป็นอะไรกับเธอ...น้า”</div>
+      <div id="countdownC" class="small mt-12" style="font-weight:800;color:var(--ink-3)"></div>
+      <div id="quoteC" class="small mt-8"></div>
+    </div>
+  </section>
+
+  <!-- Stage 3 -->
+  <section id="stage-3" class="stage">
+    <div class="card p-40 aura">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+        <h3 style="font-size:clamp(18px,2.5vw,26px);font-weight:800;color:var(--ink)">ด่าน 3: Quiz of Love 🥰</h3>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <div class="badge">ต้องตอบให้ครบ: <b id="needQ">0</b> ข้อ</div>
+          <div id="score3" class="badge">Correct: 0/0</div>
+        </div>
+      </div>
+      <div class="small mt-8">ตอบคำถามให้ครบทั้งหมด</div>
+      <div id="quiz" class="quiz mt-16"></div>
+      <div id="countdown3" class="small mt-12" style="font-weight:800;color:var(--ink-3)"></div>
+    </div>
+  </section>
+
+  <!-- Stage 4 Balloon -->
+  <section id="stage-4" class="stage">
+    <div class="card p-40 aura">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+        <h3 style="font-size:clamp(18px,2.5vw,26px);font-weight:800;color:var(--ink)">ด่าน 4: Balloon Pop 🎈</h3>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <div class="badge">🎯 ต้องจิ้ม: <b id="needB">18</b></div>
+          <div class="badge">💥 จิ้มแล้ว: <b id="hitB">0</b></div>
+          <div class="badge">⏰ เวลา: <b id="timeB">30</b>s</div>
+        </div>
+      </div>
+      <div id="balloonArea" class="mt-16"></div>
+      <div id="countdownBdone" class="small mt-12" style="font-weight:800;color:var(--ink-3)"></div>
+      <div class="mt-16" style="display:flex;gap:10px;flex-wrap:wrap">
+        <button id="startB" class="btn btn-accent">▶️ เริ่มเล่น!</button>
+        <button id="resetB" class="btn btn-ghost" disabled>🔄 เริ่มใหม่</button>
+        <button id="nextB" class="btn btn-primary hidden">ไปเซอร์ไพรส์สุดท้าย ➜</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final -->
+  <section id="stage-final" class="stage">
+    <div class="card p-40 aura">
+      <h2 class="title" style="color:#111">สำหรับเธอ, 💖</h2>
+      <p id="finalLead" class="subtitle mt-12 hand">เธอทำได้ดีมาก เก่งมากๆเลยค่ะ จุ๊บมวั๊ะะะ...💖</p>
+      <div class="mt-16" style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start">
+        <div class="card p-24 aura" style="flex:1;min-width:280px">
+          <h3 style="font-weight:800;color:var(--ink)">ซองจดหมายลับ...แต่ไม่มาก 💌</h3>
+          <div id="envelope" class="mt-12" style="width:260px;height:180px;margin:0 auto;cursor:pointer;position:relative">
+            <div style="position:absolute;inset:0;background:#fff;border:1px solid var(--ring);border-radius:12px"></div>
+            <div style="position:absolute;top:0;left:0;right:0;height:60%;background:linear-gradient(135deg,#ffe0e7,#fff);border-top-left-radius:12px;border-top-right-radius:12px;border:1px solid var(--ring);border-bottom:none"></div>
+          </div>
+          <p class="small center mt-8">คลิกเพื่อเปิดจดหมาย</p>
+        </div>
+        <div class="card p-24 aura" style="flex:1;min-width:280px">
+          <h3 style="font-weight:800;color:var(--ink)">กล่องของขวัญ 🎁</h3>
+          <div class="center"><button id="giftBtn" class="btn btn-accent">เปิดของขวัญ!</button></div>
+          <p id="giftMsg" class="small center mt-8">เปิดแล้วจะมีเซอร์ไพรส์...มั้ง </p>
+        </div>
+        <div class="card p-24 aura" style="flex:1;min-width:280px">
+          <h3 style="font-weight:800;color:var(--ink)">สุ่มสิ่งที่จะให้เค้าทำ 🎟️</h3>
+          <div id="couponRoll" class="mt-12" style="height:54px;display:grid;place-items:center;border:1px dashed var(--ring);border-radius:12px;background:#fff;font-weight:800">กด “สุ่ม!” เพื่อเริ่มลุ้น</div>
+          <button id="couponBtn" class="btn btn-accent mt-12">🎲 สุ่ม!</button>
+        </div>
+      </div>
+      <div class="mt-16" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
+        <button id="burstFinal" class="btn btn-primary">ส่งหัวใจให้เค้าหน่อย</button>
+        <button id="copyLink" class="btn btn-ghost">📋 แชร์/คัดลอกลิงก์</button>
+      </div>
+      <div class="badge mt-16">🗓️ นับถอยหลัง “วันครบรอบ” ( ทุกวันที่ 25 ทุกเดือน ): <b id="annivCountdown">-</b></div>
+    </div>
+    <p class="small center mt-16">I Love you Por ❤️</p>
+  </section>
+</div>
+
+<!-- Envelope Modal -->
+<div id="envModal" class="modal" role="dialog" aria-modal="true" aria-label="จดหมายจากเค้า">
+  <div class="letterbox">
+    <div class="letter-flap"></div>
+    <div class="letter-paper">
+      <h3 class="hand" style="margin:0 0 8px 0">ถึงคนเก่งของเค้า 💌</h3>
+      <p id="letterText" class="hand" style="margin:0">
+        ขอบคุณเธอนะที่อยู่มาด้วยกันจนถึงวันนี้ ถึงจะมีทะเลาะกันบ้าง โกรธกันบ้าง หรือชอบทำในสิ่งที่ไม่ต่างคนต่างไม่ชอบกัน
+        แต่เค้าก็รู้สึกดีใจ และรู้สึกอบอุ่นใจ ที่ยังมีเธอคอยอยู่ตรงนี้กับเค้า อยู่ด้วยกัน ให้กำลังใจกัน เป็นเซฟโซนให้กัน
+        ขอบคุณมากๆเลยนะคะคนเก่งของเค้า เค้าขอโทษนะที่เค้าชอบทำตัวนิสัยไม่ดี ดื้อ เอาแต่ใจกับเธออยู่ตลอด 
+        และก็ชอบขี้ประชด ชอบโกหกความรู้สึกตัวเองอยู่บ่อยๆ ในหลายๆเรื่อง ที่ชอทำให้เธอไม่สบายใจอยู่ตลอด
+        แต่ถึงจะเป็นแบบนั้น เค้าคนนี้ ก็รักเธอมากๆนะ รักเธอหมดหัวใจของเค้า เค้ารักเธอมากกว่าที่จะพูดหรืออธิบายออกไปได้อะ
+        เพราะงั้น อยู่กับเค้าแบบนี้ อย่าไปไหนอีกเลยนะ อยู่ด้วยกันจนแก่ไปเลยนะคะ...🩷👩‍❤️‍👨
+      </p>
+    </div>
+  </div>
+  <button id="closeEnv" class="btn btn-ghost" style="position:absolute;top:16px;right:16px">✕ ปิด</button>
+</div>
+
+<script>
+/* ====================== SETTINGS ====================== */
+const SETTINGS = {
+  secretAnniv: "25042024",
+  anniversaryDate: "2024-04-25",
+  monthlyDay: 25,
+  storyA: "สถานที่แรกที่เค้าอยากพาเธอไปเดทคือที่ไหน?",
+  storyB: "ถ้าย้อนเวลากลับไป…เธอจะ “เลือก” เค้าไหม 🥺",
+  storyC: "โตขึ้นเค้าอยากเป็นอะไร?",
+  quotesA: ["เธอของเค้า เก่งมากๆเลยค่ะ เค้ารักมะมิ๊นะคะ 💗"],
+  quotesB: ["อยู่ข้าง ๆ กัน แบบนี้ตลอดไปนะ 💖"],
+  quotesC: ["เค้าดีใจนะคะ ที่มีมะมิ๊อยู่ข้างๆเค้าแบบนี้ จุ๊บ 💝"],
+  quiz: [
+    { q:"เค้าทักไปหาเธอวันไหน?", a:["วันที่ 1","วันที่ 2","วันที่ 3"], correct:0 },
+    { q:"สถานที่ ที่เค้าอยากแต่งงานกับเธอ?", a:["🏖️ ชายหาด","⛰️ บนภูเขา","🌺 ในสวนดอกไม้"], correct:0 },
+    { q:"เค้าชอบไปเที่ยวที่ไหน?", a:["🏔️ ภูเขา","🌊 ทะเล","🌍 เมืองต่างประเทศ"], correct:0 }
+  ],
+  floatEmojis: ["💖","💕","💗","✨","⭐","🌟","💫"],
+  pets: [
+    {name:"มอมแมม", emoji:"🐶", color:"#b45309"},
+    {name:"ดุ๊กดิ๊ก", emoji:"🐶", color:"#92400e"},
+    {name:"นมจืด", emoji:"🐱", color:"#334155"}
+  ],
+  balloon: { need:18, time:30, spawnEveryMs:480, minDur:7.0, maxDur:11.0 }, // ลอยจากล่างถึงบน
+  fx: { poolHearts: 40, poolRipples: 14 } // งบพาร์ติเคิลรวม (ลื่นแม้กดรัว)
+};
+
+/* =================== Utils & Core Flow =================== */
+const $ = (id)=>document.getElementById(id);
+const STAGES = ["stage-gate","stage-story-a","stage-1","stage-story-b","stage-2","stage-story-c","stage-3","stage-4","stage-final"];
+let CURRENT_STAGE = "stage-gate";
+
+function showStage(id){
+  document.querySelectorAll(".stage").forEach(s=>{ s.classList.remove("active"); s.style.display="none"; });
+  const el=document.getElementById(id); if(!el) return;
+  el.style.display="block"; void el.offsetHeight; el.classList.add("active");
+  const bar=$("bar"); if(bar){ bar.style.width = (STAGES.indexOf(id)/(STAGES.length-1))*100 + "%"; }
+  history.replaceState(null,"","#"+id);
+  CURRENT_STAGE = id;
+  FX.setMode(id==="stage-4" ? "light" : "normal"); // ด่านลูกโป่งลดเอฟเฟกต์ global
+  scrollTo({top:0,behavior:"smooth"});
+}
+
+/* ================= Particle FX (หัวใจ/ริปเปิล) — Single RAF + Pool ================= */
+const FX = (function(){
+  const layer = $("fxLayer");
+  const maxHearts = SETTINGS.fx.poolHearts;
+  const maxRipples = SETTINGS.fx.poolRipples;
+  const hearts = []; const ripples = [];
+  let raf = null, last = performance.now(), mode = "normal";
+  let tapTimes = []; // เพื่อตรวจจับกดรัวมาก
+
+  for(let i=0;i<maxHearts;i++){
+    const el = document.createElement("span");
+    el.textContent = ["💖","💕","💗","✨","⭐"][i%5];
+    el.style.position="absolute"; el.style.willChange="transform,opacity"; el.style.opacity="0"; el.style.filter="drop-shadow(0 2px 4px rgba(0,0,0,.15))";
+    layer.appendChild(el);
+    hearts.push({el,alive:false,x:0,y:0,vx:0,vy:0,life:0,ttl:0,scale:1});
+  }
+  for(let i=0;i<maxRipples;i++){
+    const el = document.createElement("div");
+    el.style.position="absolute"; el.style.border="2px solid rgba(255,255,255,.9)"; el.style.borderRadius="999px";
+    el.style.width="14px"; el.style.height="14px"; el.style.opacity="0"; el.style.willChange="transform,opacity"; el.style.mixBlendMode="screen";
+    layer.appendChild(el);
+    ripples.push({el,alive:false,x:0,y:0,life:0,ttl:0,scale:1});
+  }
+
+  function spawnHeart(x,y,count=8){
+    const now=performance.now(); tapTimes.push(now);
+    // ตัดรายการเวลาเก่ากว่า 350ms
+    while(tapTimes.length && now - tapTimes[0] > 350) tapTimes.shift();
+    if(tapTimes.length>=6) setMode("light-temporary");
+
+    const usable = mode==="off" ? 0 : (mode==="light"||mode==="light-temporary" ? Math.ceil(count*0.4) : count);
+    for(let i=0;i<usable;i++){
+      const h = hearts.find(o=>!o.alive); if(!h) break;
+      const ang = (Math.PI*2)*(i/usable) + (Math.random()*0.6-0.3);
+      const speed = 160 + Math.random()*140;
+      const ttl = 600 + Math.random()*500;
+      const s = (mode==="light"||mode==="light-temporary") ? (12+Math.random()*6) : (14+Math.random()*16);
+      h.alive=true; h.x=x; h.y=y; h.vx=Math.cos(ang)*speed; h.vy=Math.sin(ang)*speed*0.8; h.life=0; h.ttl=ttl; h.scale=s/16;
+      h.el.style.fontSize = s+"px";
+      h.el.style.opacity="1";
+      h.el.style.transform = `translate(${x}px,${y}px) scale(1)`;
+    }
+  }
+  function spawnRipple(x,y){
+    if(mode==="off") return;
+    const r = ripples.find(o=>!o.alive); if(!r) return;
+    const ttl = 420;
+    r.alive=true; r.x=x; r.y=y; r.life=0; r.ttl=ttl; r.scale=1;
+    r.el.style.opacity="0.9";
+    r.el.style.transform=`translate(${x}px,${y}px) scale(1) translate(-50%,-50%)`;
+  }
+
+  function loop(t){
+    const dt = Math.min(48, t - last); last = t;
+
+    // hearts
+    for(const h of hearts){
+      if(!h.alive) continue;
+      h.life += dt; const p = h.life / h.ttl;
+      h.x += h.vx * (dt/1000); h.y += h.vy * (dt/1000);
+      const fade = 1 - p;
+      h.el.style.opacity = fade<=0? "0" : String(fade);
+      h.el.style.transform = `translate(${h.x}px,${h.y}px) scale(${h.scale*(1 - p*0.3)})`;
+      if(p>=1){ h.alive=false; }
+    }
+    // ripples
+    for(const r of ripples){
+      if(!r.alive) continue;
+      r.life += dt; const p=r.life/r.ttl;
+      const s = 1 + p*22;
+      r.el.style.opacity = String(0.8*(1-p));
+      r.el.style.transform = `translate(${r.x}px,${r.y}px) translate(-50%,-50%) scale(${s})`;
+      if(p>=1){ r.alive=false; r.el.style.opacity="0"; }
+    }
+
+    if(mode==="light-temporary"){
+      // กลับสู่ normal หลังผ่าน 1 วินาทีที่กดรัว
+      if(!tapTimes.length || performance.now()-tapTimes[tapTimes.length-1] > 1000){
+        setMode(CURRENT_STAGE==="stage-4" ? "light" : "normal");
+      }
+    }
+    raf = requestAnimationFrame(loop);
+  }
+  raf = requestAnimationFrame(loop);
+
+  function setMode(m){
+    mode = m;
+  }
+  return {
+    emit(x,y,hearts=10){ spawnHeart(x,y,hearts); spawnRipple(x,y); },
+    tiny(x,y){ spawnHeart(x,y,4); }, // โหมดเบา
+    ripple(x,y){ spawnRipple(x,y); },
+    setMode
+  };
+})();
+
+/* ===== Global light FX on tap (ยกเว้นด่านลูกโป่ง) ===== */
+addEventListener("pointerdown",(e)=>{
+  if(CURRENT_STAGE==="stage-4") return; // งดระหว่างบอลลูน
+  FX.emit(e.clientX,e.clientY,10);
+},{passive:true});
+
+/* ================= Visual layers ================= */
+(function stars(){ const c=document.createElement("canvas"); c.id="stars"; const old=$("stars"); old.replaceWith(c);
+  const ctx=c.getContext("2d"); let w,h,stars=[];
+  function resize(){ w=c.width=innerWidth; h=c.height=innerHeight; } addEventListener("resize",resize,{passive:true}); resize();
+  stars=Array.from({length:140},()=>({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.2+0.3,a:Math.random()*0.6+0.3,tw:Math.random()*0.02+0.005}));
+  (function step(){ ctx.clearRect(0,0,w,h); ctx.fillStyle="#fff";
+    for(const s of stars){ s.a+=s.tw; ctx.globalAlpha=0.28+0.35*Math.sin(s.a); ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,6.283); ctx.fill(); }
+    ctx.globalAlpha=1; requestAnimationFrame(step);
+  })();
+})();
+(function cssEmos(){
+  const layer=$("floatEmo"); if(!layer) return; const COUNT=18;
+  for(let i=0;i<COUNT;i++){
+    const el=document.createElement("div"); el.className="emo";
+    el.textContent=SETTINGS.floatEmojis[Math.floor(Math.random()*SETTINGS.floatEmojis.length)];
+    const x = Math.random()*90+5; const dx = (Math.random()<0.5?-1:1)*(20+Math.random()*60);
+    const dur = (18+Math.random()*12)+"s"; const delay = (Math.random()*10)+"s";
+    el.style.left = x+"vw"; el.style.setProperty("--dx", dx+"px"); el.style.animation = `floatUp ${dur} linear ${delay} infinite`;
+    layer.appendChild(el);
+  }
+})();
+(function pets(){
+  const layer=$("petsLayer"); if(!layer) return;
+  const PETS=SETTINGS.pets.map(p=>({
+    ...p, x:Math.random()*innerWidth*0.9+20, y:innerHeight*0.72 + Math.random()*60,
+    vx:(Math.random()<0.5?-1:1)*(0.9+Math.random()*0.6), vy:-0.25, rest:0, goalX:null
+  }));
+  const els=PETS.map(p=>{ const d=document.createElement("div"); d.style.position="absolute"; d.style.fontSize="28px"; d.style.color=p.color; d.textContent=p.emoji; layer.appendChild(d); return d; });
+  function loop(){
+    for(let i=0;i<PETS.length;i++){
+      const p=PETS[i], d=els[i];
+      if(p.rest>0){ p.rest--; }
+      else{
+        if(p.goalX===null && Math.random()<0.012) p.goalX=Math.random()*innerWidth*0.9+20;
+        if(p.goalX!=null){ p.vx=Math.sign(p.goalX-p.x)*(1.0+Math.random()*0.7); if(Math.abs(p.goalX-p.x)<8){ p.goalX=null; p.rest=20; } }
+        p.x+=p.vx*(1+Math.random()*0.10); p.y+=p.vy;
+        if(p.x<6||p.x>innerWidth-40){ p.vx*=-1; p.x=Math.min(Math.max(p.x,6),innerWidth-40); }
+        if(p.y<innerHeight*0.68) p.vy=0.30; if(p.y>innerHeight-60) p.vy=-0.30;
+        if(Math.random()<0.006) { const o=p.vy; p.vy=-1.0; setTimeout(()=>p.vy=o,380); }
+      }
+      d.style.transform=`translate(${p.x}px,${p.y}px)`;
+    }
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+
+/* =================== Time widgets =================== */
+(function timeWidgets(){
+  const out=$("elapsedTxt"); if(!out) return;
+  function diffStr(){
+    const start=new Date(SETTINGS.anniversaryDate+'T00:00:00'); const now=new Date();
+    let y=now.getFullYear()-start.getFullYear(); let mo=now.getMonth()-start.getMonth(); let d=now.getDate()-start.getDate();
+    let h=now.getHours()-start.getHours(), mi=now.getMinutes()-start.getMinutes(), s=now.getSeconds()-start.getSeconds();
+    if(s<0){ s+=60; mi--; } if(mi<0){ mi+=60; h--; } if(h<0){ h+=24; d--; }
+    if(d<0){ const prev=new Date(now.getFullYear(), now.getMonth(), 0).getDate(); d+=prev; mo--; } if(mo<0){ mo+=12; y--; }
+    return `${y} ปี ${mo} เดือน ${d} วัน ${String(h).padStart(2,'0')}:${String(mi).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  }
+  function nextMonthly(day){ const now=new Date(); let y=now.getFullYear(), m=now.getMonth(); let t=new Date(y,m,day,0,0,0); if(t<=now) t=new Date(y,m+1,day,0,0,0); return t; }
+  function countdownMonthly(){ const now=new Date(), tgt=nextMonthly(SETTINGS.monthlyDay); const ms=tgt-now, d=Math.floor(ms/86400000), h=Math.floor(ms/3600000)%24, m=Math.floor(ms/60000)%60, s=Math.floor(ms/1000)%60; const el=$("annivCountdown"); if(el) el.textContent=`${d} วัน ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`; }
+  setInterval(()=>{ out.textContent = diffStr(); },1000); out.textContent = diffStr();
+  setInterval(countdownMonthly,1000); countdownMonthly();
+})();
+
+/* =================== Toast =================== */
+const toasts=$("toasts");
+function toast(msg,type="info",ttl=3200){
+  const t=document.createElement("div"); t.className=`toast ${type}`; t.textContent=msg; toasts.appendChild(t);
+  requestAnimationFrame(()=>t.classList.add("show"));
+  const timer=setTimeout(()=>{ t.classList.remove("show"); setTimeout(()=>t.remove(),250); }, ttl);
+  t.addEventListener("click", ()=>{ clearTimeout(timer); t.remove(); });
+}
+
+/* =================== Gate =================== */
+(function gate(){
+  $("gateMsg").textContent = `ใส่รหัสลับของเรา..เพื่อเริ่ม ( วันที่ ${SETTINGS.monthlyDay} คือวันอะไรน้า )`;
+  $("annivInfo").textContent = "ขอให้ สนุก มีความสุข นะคะ 💞";
+  const input=$("gateInput"), btn=$("gateBtn"), keypad=$("keypad"), keyEnter=$("keyEnter"), err=$("gateErr");
+  const SECRET = normalize(SETTINGS.secretAnniv);
+  let tries=0, lockUntil=0, lastKeyAt=0;
+  function normalize(s){
+    s=(s||"").trim();
+    const m=s.match(/(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{4})/);
+    if(m) return m[1].padStart(2,'0')+m[2].padStart(2,'0')+m[3];
+    return s.replace(/[^\d]/g,"");
+  }
+  function setDisabled(v){ btn.disabled=v; keyEnter.disabled=v; keypad.querySelectorAll('.k').forEach(b=>b.disabled=v); }
+  function tryUnlock(){
+    if(Date.now()<lockUntil) return;
+    const v=normalize(input.value);
+    if(v===SECRET){
+      err.textContent=""; FX.emit(innerWidth*.5, innerHeight*.7,18);
+      showStage("stage-story-a"); location.hash="#stage-story-a";
+    }else{
+      err.textContent="รหัสยังไม่ถูกต้อง! (ใบ้: วันสำคัญในทุกเดือน";
+      tries++; if(tries>=1){
+        const LOCK=10000; lockUntil=Date.now()+LOCK; setDisabled(true);
+        let left=10; const old=btn.textContent; btn.textContent=`ล็อก ${left}s`;
+        const t=setInterval(()=>{ left--; btn.textContent = left>0? `ล็อก ${left}s` : old; if(left<=0){ clearInterval(t); setDisabled(false);} },1000);
+      }
+    }
+  }
+  btn.addEventListener("pointerdown", e=>{ e.preventDefault(); e.stopPropagation(); tryUnlock(); });
+  keyEnter.addEventListener("pointerdown", e=>{ e.preventDefault(); e.stopPropagation(); tryUnlock(); });
+  keypad.addEventListener("pointerdown", e=>{
+    const el=e.target.closest(".k"); if(!el) return; e.preventDefault(); e.stopPropagation();
+    if(performance.now()-lastKeyAt<70) return; lastKeyAt=performance.now();
+    const k=(el.textContent||"").trim(); if(k==='⌫'){ input.value=input.value.slice(0,-1); } else { input.value+=k; }
+  }, {passive:false});
+})();
+
+/* ===== Helper ===== */
+function countdownAndGo(textEl, nextStageId){
+  let left=3; textEl.textContent = `ไปต่อใน ${left} วิ…`;
+  const iv=setInterval(()=>{ left--; textEl.textContent=`ไปต่อใน ${left} วิ…`; if(left<=0){ clearInterval(iv); textEl.textContent=""; showStage(nextStageId); } },1000);
+}
+function typeText(el,text){ if(!el) return; el.textContent=""; let i=0; (function step(){ if(i<text.length){ el.textContent+=text[i++]; requestAnimationFrame(step);} })(); }
+
+/* ===== Story A ===== */
+(function storyA(){
+  typeText($("storyAtext"), SETTINGS.storyA);
+  const boxMsg=$("countdownA");
+  document.querySelectorAll(".miniA").forEach(btn=>{
+    btn.addEventListener("pointerdown", (e)=>{
+      e.preventDefault();
+      if(btn.dataset.correct==="1"){
+        btn.classList.replace("btn-ghost","btn-primary");
+        $("quoteA").textContent = SETTINGS.quotesA?.[0]||"";
+        document.querySelectorAll(".miniA").forEach(b=>b.disabled=true);
+        countdownAndGo(boxMsg, "stage-1");
+      }else{
+        toast("ลองใหม่อีกครั้งนะคะ...🥺","warn",2600); document.querySelector(".hintA").classList.remove("hidden");
+      }
+    }, {once:true});
+  });
+})();
+
+/* ===== Stage 1 ===== */
+(function stage1(){
+  const TOTAL=20, HIDDEN=7, symbols=['🌟','✨','🌙','⭐','💫','🌸','🌺','🌻','🌷','🌹','🦋','🌈','☀️','🌊','🌿','🍀','🎭','🎪','🎨','🎵'];
+  const board=$("board1"), score=$("score1"), cd=$("countdown1"); let targets=[], opened={}, found=0, completed=false;
+  function update(){ score.textContent=`Found: ${found}/${HIDDEN}`; }
+  function resetBoard(){
+    board.innerHTML=""; opened={}; found=0; completed=false; update(); cd.textContent="";
+    const arr=Array.from({length:TOTAL},(_,i)=>i).sort(()=>Math.random()-0.5); targets=arr.slice(0,HIDDEN);
+    for(let i=0;i<TOTAL;i++){ const t=document.createElement("button"); t.className="tile"; const span=document.createElement("span");
+      span.textContent=symbols[i%symbols.length]; t.appendChild(span); t.addEventListener("pointerdown",(e)=>{ e.preventDefault(); clickTile(i,t,span); }); board.appendChild(t);
+    }
+  }
+  function clickTile(i,tile,span){
+    if(opened[i]||completed) return; opened[i]=true;
+    if(targets.includes(i)){
+      tile.classList.add("found"); span.textContent="💖"; found++; FX.tiny(tile.getBoundingClientRect().left+30, tile.getBoundingClientRect().top+30);
+      update(); if(found===HIDDEN){ completed=true; countdownAndGo(cd, "stage-story-b"); }
+    } else {
+      tile.animate([{transform:'translateX(0)'},{transform:'translateX(-4px)'},{transform:'translateX(4px)'},{transform:'translateX(0)'}],{duration:200});
+    }
+  }
+  resetBoard();
+})();
+
+/* ===== Story B ===== */
+(function storyB(){
+  typeText($("storyBtext"), SETTINGS.storyB);
+  const yes=document.querySelector(".miniB-yes"), no=document.querySelector(".miniB-no"), boxMsg=$("countdownB");
+  yes.addEventListener("pointerdown", (e)=>{ e.preventDefault(); yes.classList.add("btn-primary"); yes.disabled=true; no.disabled=true; $("quoteB").textContent=SETTINGS.quotesB?.[0]||""; countdownAndGo(boxMsg, "stage-2"); });
+  no.addEventListener("pointerdown", (e)=>{ e.preventDefault(); toast("ยังไงซะ เธอก็ต้องเลือกเค้า 💗","warn",3000); no.remove(); yes.classList.add("btn-primary"); yes.focus(); }, {once:true});
+})();
+
+/* ===== Stage 2 (Memory) ===== */
+(function stage2(){
+  const grid=$("gridMatch"), score=$("score2"), cd=$("countdown2");
+  const icons=["🐻","🐱","🐶","🐰","🦊","🐼"]; let first=null, lock=false, matched=0, done=false;
+  function update(){ score.textContent=`Matched: ${matched}/${icons.length}`; }
+  function resetGrid(){
+    grid.innerHTML=""; first=null; lock=false; matched=0; done=false; update(); cd.textContent="";
+    [...icons,...icons].sort(()=>Math.random()-0.5).forEach(sym=>{
+      const c=document.createElement("div"); c.className="card-m"; c.dataset.val=sym;
+      const f=document.createElement("div"); f.className="card-face card-front"; f.textContent="❓";
+      const b=document.createElement("div"); b.className="card-face card-back"; b.textContent=sym;
+      c.appendChild(f); c.appendChild(b);
+      c.addEventListener("pointerdown",(e)=>{ e.preventDefault(); flip(c); });
+      grid.appendChild(c);
+    });
+  }
+  function flip(card){
+    if(lock||card.classList.contains("matched")||card===first||done) return;
+    card.classList.add("flip");
+    if(!first){ first=card; return; }
+    lock=true; const a=first.dataset.val, b=card.dataset.val;
+    setTimeout(()=>{ if(a===b){ first.classList.add("matched"); card.classList.add("matched"); matched++; FX.tiny(card.getBoundingClientRect().left+30, card.getBoundingClientRect().top+40); update(); if(matched===icons.length){ done=true; countdownAndGo(cd, "stage-story-c"); } } else { first.classList.remove("flip"); card.classList.remove("flip"); } first=null; lock=false; },380);
+  }
+  resetGrid();
+})();
+
+/* ===== Story C ===== */
+(function storyC(){
+  typeText($("storyCtext"), SETTINGS.storyC);
+  const input=$("answerC"), btn=$("answerCBtn"), cd=$("countdownC"), hint=document.querySelector(".hintC");
+  const OK=["เป็นแฟนของเค้า","แฟนของเค้า","แฟนเค้า","สามีเค้า"];
+  function pass(v){ v=(v||"").trim().toLowerCase(); return OK.some(a=>v.includes(a.toLowerCase())); }
+  btn.addEventListener("pointerdown", (e)=>{ e.preventDefault(); if(pass(input.value)){ input.disabled=true; btn.disabled=true; $("quoteC").textContent=SETTINGS.quotesC?.[0]||""; countdownAndGo(cd, "stage-3"); } else { toast("ใบ้นิดนึง—เค้าเป็นอะไรของเธอน้า?","warn",3000); hint.classList.remove("hidden"); input.focus(); } });
+  input.addEventListener("keydown", e=>{ if(e.key==="Enter") btn.click?.(); });
+})();
+
+/* ===== Stage 3 (Quiz) ===== */
+(function stage3(){
+  const wrap=$("quiz"), score=$("score3"), needEl=$("needQ"), cd=$("countdown3"); let sel=[];
+  function render(){
+    wrap.innerHTML="";
+    SETTINGS.quiz.forEach((it,qi)=>{
+      const q=document.createElement("div"); q.className="q"; const h=document.createElement("h4"); h.textContent=`ข้อ ${qi+1}. ${it.q}`;
+      const opt=document.createElement("div"); opt.className="opt";
+      it.a.forEach((ans,ai)=>{ const b=document.createElement("button"); b.textContent=ans; if(sel[qi]===ai) b.classList.add("selected");
+        b.addEventListener("pointerdown", (e)=>{ e.preventDefault(); sel[qi]=ai; render(); update(); });
+        opt.appendChild(b);
+      });
+      q.appendChild(h); q.appendChild(opt); wrap.appendChild(q);
+    });
+  }
+  function update(){
+    const total = SETTINGS.quiz.length; needEl.textContent=total;
+    const c = SETTINGS.quiz.reduce((acc,it,i)=> acc + (sel[i]===it.correct?1:0),0);
+    score.textContent=`Correct: ${c}/${total}`;
+    if(c===total){ if(!cd.textContent) countdownAndGo(cd, "stage-4"); } else { cd.textContent=""; }
+  }
+  sel = new Array(SETTINGS.quiz.length).fill(null); render(); update();
+})();
+
+/* ===== Stage 4 (Balloon) — Optimized for rapid taps ===== */
+(function stage4(){
+  const area=$("balloonArea"), needEl=$("needB"), hitEl=$("hitB"), timeEl=$("timeB"), startBtn=$("startB"), resetBtn=$("resetB"), nextBtn=$("nextB"), cd=$("countdownBdone");
+  const COLORS=['#ff6b81','#ff9ff3','#feca57','#48dbfb','#1dd1a1','#ff8fa3','#c084fc','#60a5fa'];
+  const cfg=SETTINGS.balloon;
+  let need, hit, left, ended=false, spawner=null, timer=null, raf=null;
+  let nodes=[], objs=[];
+
+  function clearTimers(){ if(spawner) clearInterval(spawner); if(timer) clearInterval(timer); if(raf) cancelAnimationFrame(raf); spawner=timer=raf=null; }
+  function resetUI(){ area.innerHTML=""; nodes=[]; objs=[]; hit=0; left=cfg.time; need=cfg.need; needEl.textContent=need; hitEl.textContent=hit; timeEl.textContent=left; nextBtn.classList.add("hidden"); cd.textContent=""; }
+
+  function start(){
+    clearTimers(); ended=false; resetUI();
+    startBtn.disabled=true; resetBtn.disabled=false; area.style.pointerEvents='auto';
+    spawn(); // โผล่ทันที
+    spawner=setInterval(spawn, cfg.spawnEveryMs);
+    timer=setInterval(()=>{ if(ended) return; left--; timeEl.textContent=left; if(left<=0) finish(false); }, 1000);
+    let last=performance.now(), H=area.clientHeight, W=area.clientWidth;
+    function loop(t){
+      const dt=Math.min(48, t-last); last=t;
+      // อัปเดตตำแหน่ง (ลอยขึ้น)
+      for(let i=objs.length-1;i>=0;i--){
+        const o=objs[i], n=nodes[i];
+        if(!n) continue;
+        o.y -= (H / o.dur) * (dt/1000);
+        n.style.transform = `translate(${o.x}px, ${o.y}px)`;
+        if(o.y < -120){ n.remove(); nodes.splice(i,1); objs.splice(i,1); }
+      }
+      if(!ended) raf=requestAnimationFrame(loop);
+    }
+    raf=requestAnimationFrame(loop);
+  }
+
+  function finish(ok){
+    if(ended) return; ended=true; clearTimers(); area.style.pointerEvents='none';
+    if(ok){ nextBtn.classList.remove("hidden"); cd.textContent="เก่งมากค่ะ!"; countdownAndGo(cd, "stage-final"); }
+    else { cd.textContent="ไม่เป็นไร ลองใหม่นะคะ ✌️"; }
+    startBtn.disabled=false;
+  }
+
+  function spawn(){
+    if(ended) return; if(nodes.length>28) return;
+    const wrap=document.createElement("div"); wrap.className="balloonWrap";
+    const b=document.createElement("div"); b.className="balloon";
+    const size=50+Math.random()*16; b.style.width=size+"px"; b.style.height=(size*1.25)+"px";
+    b.style.setProperty('--balloon', COLORS[Math.floor(Math.random()*COLORS.length)]);
+    wrap.appendChild(b); area.appendChild(wrap);
+    const H=area.clientHeight, W=area.clientWidth;
+    const x = 20 + Math.random()*(W-40);
+    const dur = cfg.minDur + Math.random()*(cfg.maxDur-cfg.minDur);
+    const yStart = H + 60;
+    nodes.push(wrap); objs.push({x:x, y:yStart, dur:dur});
+    wrap.style.transform = `translate(${x}px, ${yStart}px)`;
+
+    // เบาเครื่องตอนจิ้ม: กัน event global + ใช้ FX.tiny แทน FX.emit
+    b.addEventListener("pointerdown", ev=>{
+      ev.preventDefault(); ev.stopPropagation();
+      if(ended) return;
+      const rect=area.getBoundingClientRect();
+      FX.tiny(ev.clientX??(rect.left+x), ev.clientY??(rect.top+H-10));
+      wrap.remove();
+      const idx=nodes.indexOf(wrap); if(idx>-1){ nodes.splice(idx,1); objs.splice(idx,1); }
+      hit++; hitEl.textContent=hit; if(hit>=need) finish(true);
+    }, {once:true});
+  }
+
+  startBtn.addEventListener("pointerdown", (e)=>{ e.preventDefault(); start(); });
+  resetBtn.addEventListener("pointerdown", (e)=>{ e.preventDefault(); finish(false); start(); });
+  nextBtn.addEventListener("pointerdown", (e)=>{ e.preventDefault(); showStage("stage-final"); });
+
+  addEventListener("hashchange", ()=>{ if(location.hash!=='#stage-4'){ clearTimers(); area.innerHTML=""; nodes=[]; objs=[]; } });
+})();
+
+/* ===== Final ===== */
+(function finalStage(){
+  const trigger=$("envelope"), modal=$("envModal"), close=$("closeEnv");
+  trigger.addEventListener("pointerdown", e=>{ e.preventDefault(); modal.classList.add("open"); });
+  close.addEventListener("pointerdown", e=>{ e.preventDefault(); modal.classList.remove("open"); });
+  modal.addEventListener("pointerdown", e=>{ if(e.target===modal) modal.classList.remove("open"); });
+
+  $("giftBtn").addEventListener("pointerdown", e=>{ e.preventDefault(); FX.emit(innerWidth*.5, innerHeight*.6,18); $("giftMsg").textContent="จุ้บแก้มมะมิ๊ มะมิ๊เก่งมากๆเลย เค้ารักมะมิ๊มาก ๆ ค่ะ 💞"; });
+
+  const coupons=["เป็นเด็กดีไม่ดื้อของเธอ 3 วัน","อ้อนเธอน่ารักๆ","เล่นเกมกับเธอ 20 ชั่วโมง","จุ้บแก้มเธอ 100 ที","บอกรักเธอ 100 ครั้ง","นวดไหล่ 30 นาที","ตามใจเธอ 1 ข้อ","ดูหนังด้วยกัน","กระโดดตบ 5 ครั้ง","ซื้อไอติมให้เธอ"];
+  const roll=$("couponRoll"), btn=$("couponBtn"); let rolling=false;
+  btn.addEventListener("pointerdown", e=>{
+    e.preventDefault();
+    if(rolling) return; rolling=true; btn.disabled=true; let t=0; const total=1500, step=90;
+    const loop=setInterval(()=>{ roll.textContent="กำลังสุ่ม… "+coupons[Math.floor(Math.random()*coupons.length)]; t+=step;
+      if(t>=total){ clearInterval(loop); const pick=coupons[Math.floor(Math.random()*coupons.length)];
+        roll.textContent="คูปองของเรา: "+pick; rolling=false; btn.disabled=false; FX.emit(innerWidth*.5, innerHeight*.7,12);
+      }
+    }, step);
+  });
+
+  $("burstFinal").addEventListener("pointerdown", e=>{ e.preventDefault(); FX.emit(innerWidth*.5, innerHeight*.65,16); });
+  $("copyLink").addEventListener("pointerdown", async e=>{
+    e.preventDefault();
+    const data={title:"Love Stages", text:"ลองเล่นดูน้า 💖", url:location.href};
+    try{ if(navigator.share){ await navigator.share(data); toast("แชร์ให้เธอแล้ว ✨","ok",2600); return; } }catch(e){}
+    await navigator.clipboard?.writeText(data.url); toast("คัดลอกลิงก์แล้ว","ok",2400);
+  });
+})();
+
+/* Router init */
+addEventListener("load", ()=>{ const h=location.hash.replace("#",""); showStage(STAGES.includes(h)?h:"stage-gate"); });
+addEventListener("hashchange", ()=>{ const h=location.hash.replace("#",""); if(STAGES.includes(h)) showStage(h); });
+</script>
+</body>
+</html>
